@@ -14,20 +14,12 @@
 
 char    *ft_strdup(char *src)
 {
-	char *p;
-	int   count;
-	int   size;
+	int	strlen;
+	char	*str;
 
-	size  = ft_strlen(src);
-	count = 0;
-	if (size == 0 || !src ||
-	    (p = (char *)(malloc(sizeof(char) * size))) == NULL)
+	strlen = ft_strlen(src);
+	if (strlen == 0 || !src ||
+		(str = (char *)(malloc(sizeof(char) * strlen))) == NULL)
 		return (NULL);
-	while (src[count] != '\0')
-	{
-		p[count] = src[count];
-		count++;
-	}
-	p[count] = '\0';
-	return (p);
+	return (ft_strcpy(src, str));
 }
