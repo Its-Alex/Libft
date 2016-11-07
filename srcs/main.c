@@ -6,11 +6,11 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/01 16:19:52 by alex              #+#    #+#             */
-/*   Updated: 2016/11/07 10:31:42 by malexand         ###   ########.fr       */
+/*   Updated: 2016/11/07 17:11:24 by malexand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../Libft/includes/libft.h"
+#include "../../libft/libft.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -18,15 +18,25 @@
 #include <string.h>
 #include <fcntl.h>
 
-int main(void)
+t_list	*lstmap_f(t_list	*elem)
 {
-	char *s1 = "  \t \t \n   \n\n\n\t";
-	char *s2 = "";
-	char *ret = ft_strtrim(s1);
+	free(elem);
+	elem = ft_lstnew(ft_strdup("OK!"), 4);
+	return (elem);
+}
 
-	printf("%s\n", ret);
+int		main(void)
+{
+	t_list *l = ft_lstnew(strdup(" 1 2 3 "), 8);
+    t_list *ret;
 
-	if (!strcmp(ret, s2))
-		printf("FALSE\n");
-	printf("TRUE\n");
+    l->next = ft_lstnew(strdup("ss"), 3);
+    l->next->next = ft_lstnew(strdup("-_-"), 4);
+
+    ret = ft_lstmap(l, lstmap_f);
+
+
+    printf("%s, %s, %s\n%s, %s, %s\n", l->content, l->next->content, l->next->next->content, ret->content, ret->next->content, ret->next->next->content);
+    if (!strcmp(ret->content, "OK !") && !strcmp(ret->next->content, "OK !") && !strcmp(ret->next->next->content, "OK !") && !strcmp(l->content, " 1 2 3 ") && !strcmp(l->next->content, "ss") && !strcmp(l->next->next->content, "-_-"))
+   		printf("TRUE\n");
 }
