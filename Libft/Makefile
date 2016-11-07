@@ -36,7 +36,7 @@ $(NAME): $(OBCC)
 
 $(ODIR)%.o: $(SDIR)%.c
 	@echo "Génération du fichier objet $@..."
-	@gcc $^ $(CFLAG) -c -o $@ -I.incs/
+	@gcc $^ $(CFLAG) -c -o $@ -I.incs/libft.h
 
 clean:
 	@echo "Suppression des fichiers objets et des fichiers résiduels du programme..."

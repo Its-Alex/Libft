@@ -20,8 +20,13 @@
 
 int main(void)
 {
-	char *src = "there is so \0ma\0ny \0 \\0 in t\0his stri\0ng !\0\0\0\0";
-    char *d1 = strrchr(src, '\0');
-    char *d2 = ft_strrchr(src, '\0');
-    return (0);
+	char *s1 = "  \t \t \n   \n\n\n\t";
+	char *s2 = "";
+	char *ret = ft_strtrim(s1);
+
+	printf("%s\n", ret);
+
+	if (!strcmp(ret, s2))
+		printf("FALSE\n");
+	printf("TRUE\n");
 }

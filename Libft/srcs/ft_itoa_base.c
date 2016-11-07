@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
+#include <stdio.h>
 
 static	int	ft_getlen(int value, int base)
 {
@@ -49,7 +50,7 @@ char		*ft_itoa_base(int value, int base)
 
 	count = 0;
 	is_negative = 0;
-	if (value == 0)
+	if (value == 0 || value == -0)
 	{
 		str = (char*)ft_memalloc(sizeof(char) * 2);
 		str[count++] = '0';
@@ -65,6 +66,7 @@ char		*ft_itoa_base(int value, int base)
 	if (is_negative)
 		str[count++] = '-';
 	str[count] = '\0';
+	printf("%s\n", str);
 	ft_strrev(str);
 	return (str);
 }

@@ -17,7 +17,7 @@ static	size_t	ft_strstart(const char *s)
 	size_t count;
 
 	count = 0;
-	while (s[count] == ' ' || s[count] == '\n' || s[count] == '\t'||
+	while (s[count] == ' ' || s[count] == '\n' || s[count] == '\t' ||
 			s[count] == '\f' || s[count] == '\v' || s[count] == '\r')
 		count++;
 	return (count);
@@ -28,8 +28,9 @@ static	size_t	ft_strstop(const char *s)
 	size_t count;
 
 	count = ft_strlen(s) - 1;
-	while (s[count] == ' ' || s[count] == '\n' || s[count] == '\t'||
+	while ((s[count] == ' ' || s[count] == '\n' || s[count] == '\t' ||
 			s[count] == '\f' || s[count] == '\v' || s[count] == '\r')
+			&& count > 0)
 		count--;
 	return (count);
 }

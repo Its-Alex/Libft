@@ -18,7 +18,7 @@ int		ft_strncmp(const char *s1, const char *s2, size_t num)
 
 	count = 0;
 	while ((unsigned char)s1[count] == (unsigned char)s2[count] &&
-		(unsigned char)s1[count] != '\0' && 
+		(unsigned char)s1[count] != '\0' &&
 		(unsigned char)s2[count] != '\0' && num > count)
 		count++;
 	return ((unsigned char)s1[count] - (unsigned char)s2[count]);

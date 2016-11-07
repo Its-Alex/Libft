@@ -11,8 +11,9 @@
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
+#include <stdio.h>
 
-static	int	ft_getlen(int n)
+static	int		ft_getlen(int n)
 {
 	int		len;
 
@@ -25,7 +26,7 @@ static	int	ft_getlen(int n)
 	return (len);
 }
 
-static	int	ft_getstr(int n, char *str)
+static	int		ft_getstr(int n, char *str)
 {
 	int		rest;
 	int		count;
@@ -41,7 +42,26 @@ static	int	ft_getstr(int n, char *str)
 	return (count);
 }
 
-char		*ft_itoa(int n)
+static	char	*ft_return0(void)
+{
+	char	*str;
+
+	str = (char *)ft_memalloc(sizeof(char) * 2);
+	str[0] = '0';
+	str[1] = '\0';
+	return (str);
+}
+
+static	char	*ft_minint(void)
+{
+	char	*str;
+
+	str = (char *)malloc(sizeof(char) * 12);
+	str = ft_strcpy(str, "-2147483648");
+	return (str);
+}
+
+char			*ft_itoa(int n)
 {
 	int		is_negative;
 	int		count;
@@ -49,12 +69,10 @@ char		*ft_itoa(int n)
 
 	count = 0;
 	is_negative = 0;
-	if (n == 0)
-	{
-		str = (char *)ft_memalloc(sizeof(char) * 2);
-		str[count++] = '0';
-		str[count] = '\0';
-	}
+	if (n == 0 || n == -0)
+		return (ft_return0());
+	if (n == (-2147483647 - 1))
+		return (ft_minint());
 	if (n < 0)
 	{
 		n = -n;
