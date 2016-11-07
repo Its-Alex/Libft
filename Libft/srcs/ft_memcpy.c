@@ -1,27 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/05/01 16:19:52 by alex              #+#    #+#             */
-/*   Updated: 2016/11/07 10:31:42 by malexand         ###   ########.fr       */
+/*   Created: 2016/05/01 19:02:21 by alex              #+#    #+#             */
+/*   Updated: 2016/11/04 16:08:05 by malexand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../Libft/includes/libft.h"
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
-#include <fcntl.h>
+#include "../includes/libft.h"
 
-int main(void)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	char *src = "there is so \0ma\0ny \0 \\0 in t\0his stri\0ng !\0\0\0\0";
-    char *d1 = strrchr(src, '\0');
-    char *d2 = ft_strrchr(src, '\0');
-    return (0);
+	char	*dest0;
+	char	*src0;
+	size_t	count;
+
+	dest0 = (char *)dest;
+	src0 = (char *)src;
+	count = 0;
+	if (n == 0 || dest == src)
+		return (dest);
+	while (count < n)
+	{
+		dest0[count] = src0[count];
+		count++;
+	}
+	return (dest);
 }

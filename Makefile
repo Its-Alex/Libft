@@ -17,7 +17,6 @@ BLU =		\033[34m
 CYA =		\033[36m
 STD =		\033[39m
 
-
 NAME = Lib
 DEBUG = no
 CC = gcc
@@ -39,8 +38,6 @@ IDIR =		./incs/
 INCS =		$(shell ls incs/)
 INCC =		$(addprefix $(IDIR),$(INCS))
 
-INCLUDE = -I./incs/
-
 ODIR =		./objs/
 
 ifeq ($(CC), gcc)
@@ -57,7 +54,7 @@ all: $(NAME)
 $(NAME): $(OBCC)
 	@make -C ./Libft
 	@echo "Génération du programme..."
-	@$(CC) $(CFLAGS) -o $@ $(OBCC) $(INCLUDE) ./Libft/libft.a
+	@$(CC) $(CFLAGS) -o $@ $(OBCC) -I./incs/ ./Libft/libft.a
 
 $(ODIR)%.o: $(SDIR)%.c
 	@echo "Génération du fichier objet $@..."

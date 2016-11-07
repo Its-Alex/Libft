@@ -1,27 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_memccpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/05/01 16:19:52 by alex              #+#    #+#             */
-/*   Updated: 2016/11/07 10:31:42 by malexand         ###   ########.fr       */
+/*   Created: 2016/05/01 20:39:21 by alex              #+#    #+#             */
+/*   Updated: 2016/11/04 14:46:48 by malexand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../Libft/includes/libft.h"
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
-#include <fcntl.h>
+#include "../includes/libft.h"
 
-int main(void)
+void	*ft_memccpy(void *dest, const void *src, int c, size_t n)
 {
-	char *src = "there is so \0ma\0ny \0 \\0 in t\0his stri\0ng !\0\0\0\0";
-    char *d1 = strrchr(src, '\0');
-    char *d2 = ft_strrchr(src, '\0');
-    return (0);
+	char	*dest0;
+	char	*src0;
+	size_t	count;
+
+	dest0 = (char *)dest;
+	src0 = (char *)src;
+	count = 0;
+	while (count < n)
+	{
+		dest0[count] = src0[count];
+		if (src0[count] == c)
+			return (void *)(&dest[count + 1]);
+		count++;
+	}
+	return (NULL);
 }

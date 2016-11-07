@@ -6,21 +6,21 @@
 #    By: alex <alex@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/08/21 18:23:32 by alex              #+#    #+#              #
-#    Updated: 2016/06/26 14:26:41 by root             ###   ########.fr        #
+#    Updated: 2016/11/04 12:45:50 by malexand         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
 
-CFLAG = -O3 -Wall -Werror -Wextra
+CFLAG = -Wall -Werror -Wextra
 
-#SDIR =		./srcs/
-SRCS =		$(notdir $(shell ls *.c))
-#SRCC =		$(addprefix $(SDIR),$(SRCS))
+SDIR =		./srcs/
+SRCS =		$(notdir $(shell ls srcs/))
+SRCC =		$(addprefix $(SDIR),$(SRCS))
 
-#IDIR =		./incs/
-INCS =		$(notdir $(shell ls *.h))
-#INCC =		$(addprefix $(IDIR),$(INCS))
+IDIR =		./incs/
+INCS =		$(notdir $(shell ls includes/))
+INCC =		$(addprefix $(IDIR),$(INCS))
 
 ODIR =		./objs/
 OBJS =		$(SRCS:.c=.o)
@@ -31,7 +31,7 @@ all:$(NAME)
 
 $(NAME): $(OBCC)
 	@echo "Génération de la lib..."
-	@ar rc -o $@ $(OBCC)
+	@ar rc libft.a $(OBCC)
 	@ranlib $@
 
 $(ODIR)%.o: $(SDIR)%.c
@@ -47,3 +47,5 @@ fclean: clean
 	@rm -f $(NAME)
 
 re: fclean all
+
+.PHONY: all clean fclean re
