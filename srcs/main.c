@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/01 16:19:52 by alex              #+#    #+#             */
-/*   Updated: 2016/11/08 17:10:54 by malexand         ###   ########.fr       */
+/*   Updated: 2016/11/08 17:19:47 by malexand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,6 @@ int		main(void)
 		printf("CACA%s", tt[0]);
 	printf("%s, %s\n", tt[0], tt[1]);*/
 
-	printf("%s, %s\n", ft_strrchr("abcdedcba", 'a'), strrchr("abcdedcba", 'a'));
+	printf("%d, %s\n", ft_strrchr("abcdedcba", 'a'), strrchr("abcdedcba", 'a'));
 	return (0);
 }
