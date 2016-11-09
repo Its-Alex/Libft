@@ -12,62 +12,70 @@
 
 #include "libft.h"
 
-static	unsigned int	ft_count_parts(const char *s, int c)
+static const char	*ft_str_find_next(const char *str, char c, int skip)
 {
-	unsigned int	count;
-	int				state;
+	if (skip)
+		while (*str != '\0' && *str == c)
+			str++;
+	else
+		while (*str != '\0' && *str != c)
+			str++;
+	return (str);
+}
 
-	state = 0;
+static int			ft_str_count_splits(const char *str, char c)
+{
+	int count;
+
 	count = 0;
-	while (*s != '\0')
+	while (*str != '\0')
 	{
-		if (state == 1 && *s == c)
-			state = 0;
-		if (state == 0 && *s != c)
+		str = ft_str_find_next(str, c, 1);
+		if (*str != '\0')
 		{
-			state = 1;
 			count++;
+			str = ft_str_find_next(str, c, 0);
 		}
-		s++;
 	}
 	return (count);
 }
 
-static	unsigned int	ft_len_parts(const char *s, int c)
+static char			**ft_arraydel(char **ret, int len)
 {
-	unsigned int	len;
+	int count;
 
-	len = 0;
-	while (*s != c && *s != '\0')
-	{
-		len++;
-		s++;
-	}
-	return (len);
+	count = 0;
+	while (count < len)
+		free(ret[count]);
+	free(ret);
+	return (NULL);
 }
 
-char					**ft_strsplit(const char *s, char c)
+char				**ft_strsplit(char const *str, char c)
 {
-	char			**str;
-	unsigned int	nb_word;
-	unsigned int	index;
+	char		**ret;
+	int			count;
+	const char	*next;
 
-	index = 0;
-	nb_word = ft_count_parts(s, c);
-	if ((str = (char **)malloc(sizeof(char*) * ft_count_parts(s, c) + 2))
-			== NULL)
+	if (str == NULL)
 		return (NULL);
-	while (nb_word-- > 0)
+	ret = (char**)malloc(sizeof(char*) * (ft_str_count_splits(str, c) + 1));
+	if (ret == NULL)
+		return (NULL);
+	count = 0;
+	while (*str != '\0')
 	{
-		while (*s == c && *s != '\0' && nb_word != ft_count_parts(s, c))
-			s++;
-		str[index] = ft_strsub((const char *)s, 0,
-				ft_len_parts((const char *)s, c));
-		if (str[index] == NULL)
-			return (NULL);
-		s = s + ft_len_parts(s, c);
-		index++;
+		str = ft_str_find_next(str, c, 1);
+		if (*str != '\0')
+		{
+			next = ft_str_find_next(str, c, 0);
+			ret[count] = ft_strsub(str, 0, next - str);
+			if (ret[count] == NULL)
+				return (ft_arraydel(ret, count));
+			count++;
+			str = next;
+		}
 	}
-	str[index] = NULL;
-	return (str);
+	ret[count] = NULL;
+	return (ret);
 }
