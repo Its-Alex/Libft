@@ -6,7 +6,7 @@
 #    By: alex <alex@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/08/21 18:23:32 by alex              #+#    #+#              #
-#    Updated: 2016/11/07 14:46:52 by malexand         ###   ########.fr        #
+#    Updated: 2016/11/09 17:12:58 by malexand         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,11 +15,11 @@ NAME = libft.a
 CFLAG = -Wall -Werror -Wextra
 
 SDIR =		./srcs/
-SRCS =		$(notdir $(shell ls *.c))
+SRCS =		$(notdir $(shell ls srcs/*.c))
 SRCC =		$(addprefix $(SDIR),$(SRCS))
 
 IDIR =		./incs/
-INCS =		$(notdir $(shell ls *.h))
+INCS =		$(notdir $(shell ls srcs/*.h))
 INCC =		$(addprefix $(IDIR),$(INCS))
 
 ODIR =		./objs/
@@ -29,14 +29,14 @@ OBCC =		$(addprefix $(ODIR),$(OBJS))
 
 all:$(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(OBCC)
 	@echo "Génération de la lib..."
-	@ar rc libft.a $(OBJS)
+	@ar rc libft.a $(OBCC)
 	@ranlib $@
 
-%.o: %.c
+$(ODIR)%.o: $(SDIR)%.c
 	@echo "Génération du fichier objet $@..."
-	@gcc $^ $(CFLAG) -c -o $@ -I.incs/libft.h
+	@gcc $^ $(CFLAG) -c -o $@ -I.incs/../incs/libft.h
 
 clean:
 	@echo "Suppression des fichiers objets et des fichiers résiduels du programme..."
