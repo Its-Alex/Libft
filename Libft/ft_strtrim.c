@@ -6,40 +6,73 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/07 21:53:03 by alex              #+#    #+#             */
-/*   Updated: 2016/11/09 13:32:41 by malexand         ###   ########.fr       */
+/*   Updated: 2016/11/09 15:35:39 by malexand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static	size_t	ft_strstart(const char *s)
+static	char	*ft_dtrim(char const *s)
 {
-	size_t count;
+	int		count_trim;
+	int		count;
+	char	*tmp;
 
+	count_trim = 0;
 	count = 0;
-	while (s[count] == ' ' || s[count] == '\n' || s[count] == '\t' ||
-			s[count] == '\f' || s[count] == '\v' || s[count] == '\r')
+	if (!s)
+		return (NULL);
+	while (s[count_trim] == 32 || s[count_trim] == '\n' ||
+		s[count_trim] == '\t')
+	{
+		count_trim++;
+	}
+	if ((tmp = (char *)malloc(sizeof(*tmp) * (ft_strlen(s) + 1 - count_trim)))
+		== NULL)
+		return (NULL);
+	while (s[count_trim + count])
+	{
+		tmp[count] = s[count_trim + count];
 		count++;
-	return (count);
+	}
+	tmp[count] = '\0';
+	return (tmp);
 }
 
-static	size_t	ft_strstop(const char *s)
+static	char	*ft_ltrim(char *s)
 {
-	size_t count;
+	int		count_trim;
+	int		count;
+	int		len;
+	char	*tmp;
 
-	count = ft_strlen(s) - 1;
-	while ((s[count] == ' ' || s[count] == '\n' || s[count] == '\t' ||
-			s[count] == '\f' || s[count] == '\v' || s[count] == '\r')
-			&& count > 0)
-		count--;
-	return (count);
+	if (!s)
+		return (NULL);
+	len = ft_strlen(s) - 1;
+	count_trim = 0;
+	count = 0;
+	while (s[len - count_trim] == 32 || s[len - count_trim] == '\n' ||
+		s[len - count_trim] == '\t')
+	{
+		count_trim++;
+	}
+	if ((tmp = (char *)malloc(sizeof(*tmp) * (len + 2 - count_trim))) == NULL)
+		return (NULL);
+	len++;
+	while (count < len - count_trim)
+	{
+		tmp[count] = s[count];
+		count++;
+	}
+	tmp[count] = '\0';
+	return (tmp);
 }
 
-char			*ft_strtrim(const char *s)
+char			*ft_strtrim(char const *s)
 {
 	if (!s)
 		return (NULL);
-	if (ft_strstart(s) >= ft_strstop(s))
-		return ("");
-	return (ft_strsub(s, ft_strstart(s), ft_strstop(s) - ft_strstart(s) + 1));
+	if (!ft_ltrim(ft_dtrim(s)))
+		return (NULL);
+	return (ft_ltrim(ft_dtrim(s)));
 }

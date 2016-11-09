@@ -21,7 +21,7 @@ NAME = Lib
 DEBUG = yes
 CC = gcc
 
-LIB = yes
+LIB = no
 
 ifeq ($(DEBUG), yes)
 	CFLAGS = -O3 -g -Wall -Werror -Wextra
@@ -58,7 +58,7 @@ $(NAME): $(OBCC)
 
 $(ODIR)%.o: $(SDIR)%.c
 	@echo "Génération du fichier objet $@..."
-	@gcc $^ $(CFLAG) -c -o $@
+	@$(CC) $^ $(CFLAG) -c -o $@
 
 clean:
 	@echo "Suppression des fichiers objets et des fichiers résiduels du programme..."
