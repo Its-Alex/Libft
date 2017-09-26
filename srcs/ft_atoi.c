@@ -6,13 +6,13 @@
 /*   By: malexand <malexand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 15:40:28 by malexand          #+#    #+#             */
-/*   Updated: 2017/02/16 17:34:28 by malexand         ###   ########.fr       */
+/*   Updated: 2017/09/26 18:11:44 by malexand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_atoi(char *str)
+int		ft_atoi(const char *str)
 {
 	int negative;
 	int nbr;

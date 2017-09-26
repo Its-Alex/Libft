@@ -1,76 +1,128 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_next_line.c                                 :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aguemy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/16 14:49:20 by malexand          #+#    #+#             */
-/*   Updated: 2017/02/16 18:50:09 by alex             ###   ########.fr       */
+/*   Created: 2016/12/07 13:49:00 by aguemy            #+#    #+#             */
+/*   Updated: 2017/02/23 14:06:30 by aguemy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char		*gnl_join(char *dst, char *src)
+char		*ft_multi(t_list **lst, int fd)
 {
-	char	*tmp;
+	t_list			*lst1;
+	t_list			*lst2;
+	t_fd			*node;
 
-	tmp = dst;
-	if ((dst = ft_strjoin(tmp, src)) == NULL)
-		return (NULL);
-	free(tmp);
-	return (dst);
-}
-
-static int		gnl_read(int const fd, char *save[fd])
-{
-	int		ret;
-	char	buf[BUFF_SIZE + 1];
-
-	while (!(ft_strchr(save[fd], '\n')) && (ret = read(fd, buf, BUFF_SIZE)) > 0)
+	lst1 = *lst;
+	while (lst1 && lst1->content && ((t_fd*)(lst1->content))->filed != fd)
+		lst1 = lst1->next;
+	if (lst1 && lst1->content && ((t_fd*)(lst1->content))->str)
+		return (((t_fd*)(lst1->content))->str);
+	else
 	{
-		buf[ret] = '\0';
-		save[fd] = gnl_join(save[fd], buf);
+		if (!(node = (t_fd*)malloc(sizeof(t_fd))))
+			return (NULL);
+		if ((lst2 = ft_lstnew(node, 0)))
+		{
+			free(node);
+			((t_fd*)(lst2->content))->filed = fd;
+			((t_fd*)(lst2->content))->str = NULL;
+			ft_lstadd(lst, lst2);
+		}
+		return (NULL);
 	}
-	return (ret);
 }
 
-static int		gnl_copy(int const fd, char *save[fd], char **line)
+void		ft_multi_up(t_list **lst, int fd, char *tmp1)
 {
-	int		i;
-	char	*tmp;
+	t_list			*tmp;
 
-	i = 0;
-	while (save[fd][i] != '\n' && save[fd][i] != '\0')
-		i++;
-	*line = ft_strsub(save[fd], 0, i);
-	tmp = (char *)malloc(sizeof(tmp) * (ft_strlen(save[fd]) + 1));
-	if (tmp == NULL)
-		return (-1);
-	ft_strcpy(tmp, &save[fd][i + 1]);
-	ft_strclr(save[fd]);
-	save[fd] = ft_strcpy(save[fd], tmp);
-	free(tmp);
+	tmp = *lst;
+	while (tmp && tmp->content && ((t_fd*)(tmp->content))->filed != fd)
+		tmp = tmp->next;
+	if (tmp && (t_fd*)(tmp->content))
+		((t_fd*)(tmp->content))->str = tmp1;
+}
+
+int			ft_update(char **tmp1, char **tmp2, int *flag, int fd)
+{
+	char			buf[BUFF_SIZE + 1];
+	char			*tmp3;
+	int				lu;
+
+	while ((!(*tmp2)) && (*flag > 0))
+	{
+		lu = read(fd, buf, BUFF_SIZE);
+		if (lu == -1)
+			return (-1);
+		if (lu)
+		{
+			buf[lu] = '\0';
+			if (!(*tmp1))
+				*tmp1 = ft_strnew(1);
+			tmp3 = ft_strjoin(*tmp1, buf);
+			ft_strdel(tmp1);
+			if (!(*tmp1 = tmp3))
+				return (-1);
+			*tmp2 = ft_strchr(*tmp1, '\n');
+			(*flag)++;
+		}
+		else
+			*flag = (*flag) * -1;
+	}
 	return (1);
 }
 
-int				get_next_line(int const fd, char **line)
+void		line_update(char **tmp1, char **tmp2, char **line)
 {
-	static	char	*save[256];
+	char	*tmp3;
 
-	if (fd < 0 || line == NULL || fd > 256 || BUFF_SIZE <= 0)
-		return (-1);
-	if (!save[fd] && (!(save[fd] = (char *)malloc(sizeof(save[fd]) * 2))))
-		return (-1);
-	if (gnl_read(fd, &(*save)) < 0)
-		return (-1);
-	if (save[fd][0] == '\0')
+	if (*tmp2)
 	{
-		*line = NULL;
+		(*line) = ft_strnew(*tmp2 - *tmp1 + 1);
+		(*line) = ft_strncpy(*line, *tmp1, *tmp2 - *tmp1);
+		tmp3 = ft_strdup(*tmp2 + 1);
+		ft_strdel(tmp1);
+		*tmp1 = tmp3;
+	}
+	else
+	{
+		(*line) = ft_strdup(*tmp1);
+		ft_strdel(tmp1);
+		*tmp1 = ft_strnew(1);
+	}
+}
+
+int			get_next_line(int fd, char **line)
+{
+	static t_list	*lst = NULL;
+	char			*tmp2;
+	int				flag;
+	char			*tmp1;
+
+	if (fd < 0)
+		return (-1);
+	flag = 1;
+	tmp2 = NULL;
+	if ((tmp1 = ft_multi(&lst, fd)))
+		tmp2 = (char*)ft_strchr(tmp1, '\n');
+	if (!tmp2)
+		if (ft_update(&tmp1, &tmp2, &flag, fd) == -1)
+			return (-1);
+	if (flag != -1 || (tmp1 && tmp1[0]))
+	{
+		line_update(&tmp1, &tmp2, line);
+		ft_multi_up(&lst, fd, tmp1);
+		return (1);
+	}
+	else
+	{
+		(*line) = NULL;
 		return (0);
 	}
-	if (gnl_copy(fd, &(*save), line) < 0)
-		return (-1);
-	return (1);
 }

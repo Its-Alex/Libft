@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstiter.c                                       :+:      :+:    :+:   */
+/*   ft_max.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malexand <malexand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aguemy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/07 15:20:50 by malexand          #+#    #+#             */
-/*   Updated: 2017/09/26 18:07:15 by malexand         ###   ########.fr       */
+/*   Created: 2017/02/21 11:33:38 by aguemy            #+#    #+#             */
+/*   Updated: 2017/02/21 11:35:24 by aguemy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstiter(t_list *lst, void (*f)(t_list *elem))
+int	ft_max(int a, int b)
 {
-	if (lst != NULL && f)
-	{
-		while (lst != NULL)
-		{
-			f(lst);
-			lst = lst->next;
-		}
-	}
+	if (b > a)
+		return (b);
+	return (a);
 }

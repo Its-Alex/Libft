@@ -5,85 +5,54 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: malexand <malexand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/06/26 13:36:53 by root              #+#    #+#             */
-/*   Updated: 2017/02/16 17:34:19 by malexand         ###   ########.fr       */
+/*   Created: 2016/11/21 15:57:14 by aguemy            #+#    #+#             */
+/*   Updated: 2017/09/26 18:05:06 by malexand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static	int		ft_getlen(int n)
+static int		absolute(int n)
 {
-	int		len;
+	if (n < 0)
+		return (-n);
+	else
+		return (n);
+}
 
-	len = 0;
-	while (n != 0)
+static int		alloc_me(char **str, int n)
+{
+	int		i;
+
+	i = 0;
+	if (n < 0)
+		i = 1;
+	while (n < -9 || n > 9)
 	{
 		n = n / 10;
-		len++;
+		i++;
 	}
-	return (len);
-}
-
-static	int		ft_getstr(int n, char *str)
-{
-	int		rest;
-	int		count;
-
-	rest = 0;
-	count = 0;
-	while (n != 0)
-	{
-		rest = n % 10;
-		str[count++] = rest + '0';
-		n = n / 10;
-	}
-	return (count);
-}
-
-static	char	*ft_return0(void)
-{
-	char	*str;
-
-	str = (char *)ft_memalloc(2);
-	str[0] = '0';
-	str[1] = '\0';
-	return (str);
-}
-
-static	char	*ft_minint(void)
-{
-	char	*str;
-
-	str = ft_strnew(11);
-	str = ft_strcpy(str, "-2147483648");
-	return (str);
+	if (!(*str = (char*)malloc(sizeof(char) * (i + 2))))
+		return (0);
+	(*str)[i + 1] = '\0';
+	return (i + 1);
 }
 
 char			*ft_itoa(int n)
 {
-	int		is_negative;
-	int		count;
+	int		j;
 	char	*str;
 
-	count = 0;
-	is_negative = 0;
-	if (n == 0 || n == -0)
-		return (ft_return0());
-	if (n == (-2147483647 - 1))
-		return (ft_minint());
-	if (n < 0)
-	{
-		n = -n;
-		is_negative = 1;
-	}
-	if ((str = ft_strnew(ft_getlen(n) + is_negative))
-			== NULL)
+	if (!(j = alloc_me(&str, n)))
 		return (NULL);
-	count = ft_getstr(n, str);
-	if (is_negative)
-		str[count++] = '-';
-	str[count] = '\0';
-	ft_strrev(str);
+	while (n < -9 || n > 9)
+	{
+		str[j - 1] = absolute(n % 10) + 48;
+		n = n / 10;
+		j--;
+	}
+	str[j - 1] = absolute(n % 10) + 48;
+	if (n < 0)
+		str[0] = '-';
 	return (str);
 }

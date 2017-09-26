@@ -1,33 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_putdbl_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: malexand <malexand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/07/16 10:51:55 by malexand          #+#    #+#             */
-/*   Updated: 2017/09/26 18:12:07 by malexand         ###   ########.fr       */
+/*   Created: 2017/09/26 18:21:00 by malexand          #+#    #+#             */
+/*   Updated: 2017/09/26 18:29:07 by malexand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(const char *src)
+void	ft_putdbl_fd(int fd, double d)
 {
-	int		count;
-	int		src_size;
-	char	*new_str;
-
-	count = 0;
-	src_size = ft_strlen(src);
-	new_str = ft_strnew(src_size);
-	if (new_str == NULL)
-		return (NULL);
-	while (count < src_size)
+	if (d < 0.0 && d > -1.0)
+		ft_putchar('-');
+	ft_putnbr_fd(trunc(d), fd);
+	d -= trunc(d);
+	if (d < 0.0)
+		d = -d;
+	if (d != 0.0)
+		ft_putchar('.');
+	while (d != 0.0)
 	{
-		new_str[count] = src[count];
-		count++;
+		d = d * 10;
+		ft_putnbr_fd(trunc(d), fd);
+		d -= trunc(d);
 	}
-	new_str[src_size] = '\0';
-	return (new_str);
 }

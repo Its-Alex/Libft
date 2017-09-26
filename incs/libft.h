@@ -6,7 +6,7 @@
 /*   By: malexand <malexand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/01 18:36:27 by alex              #+#    #+#             */
-/*   Updated: 2017/02/16 14:14:42 by malexand         ###   ########.fr       */
+/*   Updated: 2017/09/26 18:22:32 by malexand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <unistd.h>
 # include <string.h>
 # include <fcntl.h>
-# include <errno.h>
+# include <math.h>
 # include <limits.h>
 # include <stdarg.h>
 
@@ -30,8 +30,7 @@
 # define CYN   "\x1B[36m"
 # define WHT   "\x1B[37m"
 # define RESET "\x1B[0m"
-# define BUFF_SIZE 1024
-# define SIZE_FD 2147483647
+# define BUFF_SIZE 32
 
 typedef struct		s_list
 {
@@ -39,6 +38,17 @@ typedef struct		s_list
 	size_t			content_size;
 	struct s_list	*next;
 }					t_list;
+
+typedef struct		s_fd
+{
+	int				filed;
+	char			*str;
+}					t_fd;
+
+void				error(int error, int send_perror, char *str);
+
+int					ft_max(int a, int b);
+int					ft_min(int a, int b);
 
 int					ft_isalpha(int c);
 int					ft_isdigit(int c);
@@ -59,10 +69,11 @@ void				ft_putendl(const char *s);
 void				ft_putendl_fd(const char *s, int fd);
 void				ft_putnbr(int nb);
 void				ft_putnbr_fd(int n, int fd);
+void				ft_putdbl(double d);
+void				ft_putdbl_fd(int fd, double d);
 void				ft_putlong(long n);
 void				ft_putlong_fd(long n, int fd);
 void				ft_freetab(char **tab);
-void				error(int error, int send_perror, char *str);
 
 int					ft_strcmp(const char *s1, const char *s2);
 int					ft_strncmp (const char *s1, const char *s2, size_t num);
@@ -77,7 +88,7 @@ char				*ft_strncpy (char *dest, const char *src, size_t n);
 char				*ft_strchr(const char *str, int c);
 char				*ft_strrchr(const char *str, int c);
 char				*ft_strnew(size_t size);
-char				*ft_strdup(char *src);
+char				*ft_strdup(const char *src);
 char				*ft_strrev(char *str);
 char				*ft_strmap(const char *s, char (*f)(char));
 char				*ft_strmapi(const char *s, char (*f)(unsigned int, char));
@@ -93,7 +104,7 @@ void				ft_striteri(char *s, void (*f)(unsigned int, char *));
 size_t				ft_strlen(const char *str);
 size_t				ft_strlcat(char *dst, const char *src, size_t size);
 
-int					ft_atoi(char *str);
+int					ft_atoi(const char *str);
 char				*ft_itoa(int value);
 char				*ft_itoa_base(int value, int base);
 void				ft_swap(size_t *a, size_t *b);
