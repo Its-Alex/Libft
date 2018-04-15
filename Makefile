@@ -10,24 +10,35 @@
 #                                                                              #
 # **************************************************************************** #
 
-EXEC = libft.a
+LIB_NAME = libft.a
 
-CC 					= clang
+CC 					= gcc
 DEBUG				= no
 OS 					= $(shell uname -s)
-MKDIR_P 			= mkdir -p
+DEPEND_FRAGMENT 	= Make.depend
+MAKEFLAGS 			+= --silent
+
+ifeq ($(DEBUG), yes)
+	CFLAGS =		-Wall -Werror -Wextra -g -ggdb -fsanitize=address -v
+	CXXFLAGS =
+	CPPFLAGS =
+else
+	CFLAGS =		-Wall -Werror -Wextra -O3
+	CXXFLAGS =
+	CPPFLAGS =
+endif
+
+ifeq ($(OS), Linux)
+	LFLAGS =
+	INCLUDE =		-I./incs
+else
+	LFLAGS =
+	INCLUDE =		-I./incs
+endif
+
 OUT_DIR 			= objs
 SRC_DIR 			= srcs
 INC_DIR				= incs
-FIRST				= yes
-
-INC		 			= -I./incs
-
-ifeq ($(DEBUG), yes)
-	CFLAGS = 		-Wall -Werror -Wextra -g -ggdb -fsanitize=address -v
-else
-	CFLAGS = 		-Wall -Werror -Wextra -O3
-endif
 
 SDIR =				srcs/
 SRCS =				ft_atoi.c ft_bzero.c ft_error.c ft_freetab.c ft_isalnum.c ft_isalpha.c \
@@ -47,18 +58,24 @@ SRCS =				ft_atoi.c ft_bzero.c ft_error.c ft_freetab.c ft_isalnum.c ft_isalpha.c
 SRCC =				$(addprefix $(SDIR),$(SRCS))
 
 ODIR =				objs/
-OBJS =				$(SRCS:.c=.o)
+ifeq ($(CC), gcc)
+	OBJS = 			$(SRCS:.c=.o)
+else
+	OBJS = 			$(SRCS:.cpp=.o)
+endif
 OBCC =				$(addprefix $(ODIR),$(OBJS))
 
-all: directories $(EXEC)
+all: dirs $(DEPEND_FRAGMENT) $(LIB_NAME)
 
-$(EXEC): $(OBCC)
+-include $(DEPEND_FRAGMENT)
+
+$(LIB_NAME): $(OBCC)
 ifeq ($(OS), Linux)
-	@ar rc libft.a $(OBCC)
+	@ar rc $(LIB_NAME) $(OBCC)
 	@ranlib $@
 	@echo -e "\x1b[36m  + Compile program:\x1B[0m $@"
 else
-	@ar rc libft.a $(OBCC)
+	@ar rc $(LIB_NAME) $(OBCC)
 	@ranlib $@
 	@echo "\x1b[36m  + Compile program:\x1B[0m $@"
 	@echo "\x1B[31m\c"
@@ -67,26 +84,40 @@ else
 endif
 
 $(ODIR)%.o: $(SDIR)%.c
-	@$(CC) $^ $(CFLAG) -c -o $@ $(INC)
+	$(CC) $< $(CFLAGS) -c -o $@ $(INCLUDE)
 ifeq ($(OS), Linux)
-	@echo -e "\r\033[1A\033[K\x1B[32m  + Compile:\x1B[0m $(notdir $^)"
+	@echo -e "\r\x1B[32m  + Compile:\x1B[0m $(notdir $<)"
 else
-	@echo "\r\033[1A\033[K\x1B[32m  + Compile:\x1B[0m $(notdir $^)"
+	@echo "\r\x1B[32m  + Compile:\x1B[0m $(notdir $<)"
 endif
 
-directories: $(OUT_DIR) $(SRC_DIR) $(INC_DIR)
+$(ODIR)%.o: $(SDIR)%.cpp
+	$(CC) $< $(CXXFLAGS) -c -o $@ $(INCLUDE)
+ifeq ($(OS), Linux)
+	@echo -e "\r\x1B[32m  + Compile:\x1B[0m $(notdir $<)"
+else
+	@echo "\r\x1B[32m  + Compile:\x1B[0m $(notdir $<)"
+endif
+
+$(DEPEND_FRAGMENT): $(SRCC)
+	@touch $(DEPEND_FRAGMENT)
+	@makedepend -f $(DEPEND_FRAGMENT) -- -Y -O -DHACK $(CFLAGS) $(CXXFLAGS) $(INCLUDE) -- $(SRCC) >& /dev/null
+	@sed 's/.\/srcs/.\/objs/g' $(DEPEND_FRAGMENT) > $(DEPEND_FRAGMENT).bak
+	@mv $(DEPEND_FRAGMENT).bak $(DEPEND_FRAGMENT)
+
+dirs: $(OUT_DIR) $(SRC_DIR) $(INC_DIR)
 
 $(OUT_DIR):
-	@$(MKDIR_P) $(OUT_DIR)
+	@mkdir -p $(OUT_DIR)
 
 $(SRC_DIR):
-	@$(MKDIR_P) $(SRC_DIR)
+	@mkdir -p $(SRC_DIR)
 
 $(INC_DIR):
-	@$(MKDIR_P) $(INC_DIR)
+	@mkdir -p $(INC_DIR)
 
 clean:
-	@rm -rf $(OUT_DIR)
+	@rm -rf $(OUT_DIR) $(DEPEND_FRAGMENT)
 ifeq ($(OS), Linux)
 	@echo -e "\x1B[31m  - Remove:\x1B[0m objs"
 else
@@ -94,22 +125,14 @@ else
 endif
 
 fclean: clean
-	@rm -f $(EXEC)
+	@rm -f $(LIB_NAME)
 ifeq ($(OS), Linux)
-	@echo -e "\x1B[31m  - Remove:\x1B[0m $(EXEC)"
+	@echo -e "\x1B[31m  - Remove:\x1B[0m $(LIB_NAME)"
 else
-	@echo "\x1B[31m  - Remove:\x1B[0m $(EXEC)"
-endif
-
-delete:
-	@rm -f $(EXEC)
-ifeq ($(OS), Linux)
-	@echo -e "\x1B[31m  - Remove:\x1B[0m $(EXEC)"
-else
-	@echo "\x1B[31m  - Remove:\x1B[0m $(EXEC)"
+	@echo "\x1B[31m  - Remove:\x1B[0m $(LIB_NAME)"
 endif
 
 re: fclean
-	re
+	make
 
-.PHONY: all clean fclean re run directories cleanlib delete
+.PHONY: all clean fclean re run dirs cleanlib delete
