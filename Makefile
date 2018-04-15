@@ -15,7 +15,7 @@ LIB_NAME = libft.a
 CC 					= gcc
 DEBUG				= no
 OS 					= $(shell uname -s)
-DEPEND_FRAGMENT 	= Make.depend
+DEPEND_FRAGMENT 	= Make.deps
 MAKEFLAGS 			+= --silent
 
 ifeq ($(DEBUG), yes)
