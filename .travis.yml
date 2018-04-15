@@ -1,0 +1,22 @@
+language: c
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: enable
+    - os: osx
+      osx_image: xcode9.3
+      sudo: enable
+
+compiler:
+  - gcc
+  - clang
+
+  addons:
+    apt:
+      packages:
+        - xutils-dev
+
+script:
+  - make
